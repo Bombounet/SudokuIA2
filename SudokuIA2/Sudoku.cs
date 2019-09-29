@@ -158,7 +158,7 @@ namespace SudokuIA2
 
             bool error = false;
 
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < 9; i++)  //Validation des lignes
             {
                 int[] list9 = new int[9];
                 for (int j = 0; j < 9; j++)
@@ -169,7 +169,7 @@ namespace SudokuIA2
                     error = true;
             }
 
-            for (int j = 0; j < 9; j++)
+            for (int j = 0; j < 9; j++)  //Validation des colonnes
             {
                 int[] list9 = new int[9];
                 for (int i = 0; i < 9; i++)
@@ -180,7 +180,7 @@ namespace SudokuIA2
                     error = true;
             }
 
-            for (int ii = 0; ii < 3; ii++)
+            for (int ii = 0; ii < 3; ii++)  //Validation des blocs
             {
                 for (int jj = 0; jj < 3; jj++)
                 {
@@ -199,11 +199,11 @@ namespace SudokuIA2
 
             if (error)
             {
-                Console.WriteLine("!!! ECHEC !!! : Ce sudoku n'est pas validé");
+                Console.WriteLine("        !!! ECHEC !!! : Ce sudoku n'est pas validé");
                 return false;
             }
             else
-                Console.WriteLine("!!! FELICITATION !!! : Ce sudoku est validé");
+                Console.WriteLine("        !!! FELICITATION !!! : Ce sudoku est validé");
             return true;
         }
 
@@ -229,14 +229,14 @@ namespace SudokuIA2
         {
             if (sudoku.Length != 9)
             {
-                Console.WriteLine("!!! WARNING !!! : Nombre de lignes incorrect (" + sudoku.Length + ", au lieu de 9) lors de la commande " + log);
+                Console.WriteLine("        !!! WARNING !!! : Nombre de lignes incorrect (" + sudoku.Length + ", au lieu de 9) lors de la commande " + log);
                 return false;
             }
             for (int i = 0; i < 9; i++)
             {
                 if (sudoku[i].Length != 9)
                 {
-                    Console.WriteLine("!!! WARNING !!! : Nombre de colonnes incorrect a la ligne " + i + " (" + sudoku.Length + ", au lieu de 9) lors de la commande " + log);
+                    Console.WriteLine("        !!! WARNING !!! : Nombre de colonnes incorrect a la ligne " + i + " (" + sudoku.Length + ", au lieu de 9) lors de la commande " + log);
                     return false;
                 }
                 for (int j = 0; j < 9; j++)
@@ -252,13 +252,13 @@ namespace SudokuIA2
         {
             if (initialSudoku[line][column] != 0 && value != initialSudoku[line][column])
             {
-                Console.WriteLine("!!! WARNING !!! : Cette case ne peut etre modifié, c'est une case fixé par le sudoku. (case [" + line + "][" + column + "]) lors de la commande " + log);
+                Console.WriteLine("        !!! WARNING !!! : Cette case ne peut etre modifié, c'est une case fixé par le sudoku. (case [" + line + "][" + column + "]) lors de la commande " + log);
                 return false;
             }
 
             if (value < 0 || value > 9)
             {
-                Console.WriteLine("!!! WARNING !!! : Valeur non valable à la case [" + line + "][" + column + "] (" + value + ", au lieu de [0,1,2,3,4,5,6,7,8,9]) lors de la commande " + log);
+                Console.WriteLine("        !!! WARNING !!! : Valeur non valable à la case [" + line + "][" + column + "] (" + value + ", au lieu de [0,1,2,3,4,5,6,7,8,9]) lors de la commande " + log);
                 return false;
             }
 
@@ -269,11 +269,11 @@ namespace SudokuIA2
         {
             if (list9.Length != 9)
             {
-                Console.WriteLine("!!! WARNING !!! : Nombre d'éléments incorect (" + log + ")");
+                Console.WriteLine("        !!! WARNING !!! : Nombre d'éléments incorect (" + log + ")");
                 return false;
             }
 
-            bool flag;
+            bool flag;  //Tri de la liste
             do
             {
                 flag = false;
@@ -291,15 +291,15 @@ namespace SudokuIA2
 
             for (int k = 0; k < 9; k++)
             {
-                if (list9[k] == 0)
+                if (list9[k] == 0)  //Pas de 0 dans le sudoku
                 {
-                    Console.WriteLine("!!! ERROR !!! : Solution non valide : il y a encore un 0 (" + log + ")");
+                    Console.WriteLine("        !!! ERROR !!! : Solution non valide : il y a encore un 0 (" + log + ")");
                     return false;
                 }
                 if (k != 8)
-                    if (list9[k] == list9[k + 1])
+                    if (list9[k] == list9[k + 1])  //Pas de doublons dans le sudoku
                     {
-                        Console.WriteLine("!!! ERROR !!! : Solution non valide : il y a un doublons (" + log + ")");
+                        Console.WriteLine("        !!! ERROR !!! : Solution non valide : il y a un doublons (" + log + ")");
                         return false;
                     }
             }
