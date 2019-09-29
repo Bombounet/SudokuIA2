@@ -22,7 +22,7 @@ namespace SudokuIA2
                 initialSudoku[i] = new int[9];
                 wokrkingSudoku[i] = new int[9];
             }
-
+            //---------------------------A COMPLETER---------------------------------------------------------------------------------------------------------A COMPLETER
             String init = "003020600900305001001806400008102900700000008006708200002609500800203009005010300";
 
             initialSudoku = stringToSudoku(init);
@@ -31,9 +31,18 @@ namespace SudokuIA2
 
         /*--------------------Getter & Setter--------------------*/
 
-        public int[][] getInitialSudoku()  //Recupére le sudoku initiale
+        public int[][] getInitialSudoku(int[][] sudoku)  //Recupére le sudoku initiale
         {
-            return initialSudoku;
+            sudoku = new int[9][];
+            for (int i = 0; i < 9; i++)
+            {
+                sudoku[i] = new int[9];
+                for (int j = 0; j < 9; j++)
+                {
+                    sudoku[i][j] = initialSudoku[i][j];
+                }
+            }
+            return sudoku;
         }
 
         public int getCaseInitialSudoku(int line, int column)  //Recupére une case du sudoku initiale
@@ -41,9 +50,18 @@ namespace SudokuIA2
             return initialSudoku[line][column];
         }
 
-        public int[][] getSudoku()  //Recupére le sudoku de "travail"
+        public int[][] getSudoku(int[][] sudoku)  //Recupére le sudoku de "travail"
         {
-            return wokrkingSudoku;
+            sudoku = new int[9][];
+            for (int i = 0; i < 9; i++)
+            {
+                sudoku[i] = new int[9];
+                for (int j = 0; j < 9; j++)
+                {
+                    sudoku[i][j] = wokrkingSudoku[i][j];
+                }
+            }
+            return sudoku;
         }
         public int getCaseSudoku(int line, int column)  //Recupére une case du sudoku de "travail"
         {
@@ -54,9 +72,13 @@ namespace SudokuIA2
         {
             if (!checkSudoku(sudoku, "setSudoku"))  //Renvoie false si ce n'est pas autorisé
                 return false;
-
-            wokrkingSudoku = sudoku;
-
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    wokrkingSudoku[i][j] = sudoku[i][j];
+                }
+            }
             return true;
         }
 
@@ -123,10 +145,72 @@ namespace SudokuIA2
 
         /*--------------------Validation du Sudoku--------------------*/
 
+        public bool validationSudoku()  //Valide le sudoku de "travail"
+        {
+            if (!validation(wokrkingSudoku))  //Renvoie false si il y a un probleme 
+                return false;
+            return true;
+        }
+        public bool validation(int[][] sudoku)  //Valide un sudoku  /*--------------------A Optimiser--------------------*/
+        {
+            if (!checkSudoku(sudoku, "validation"))  //Renvoie false si il y a un probleme 
+                return false;
+
+            bool error = false;
+
+            for (int i = 0; i < 9; i++)
+            {
+                int[] list9 = new int[9];
+                for (int j = 0; j < 9; j++)
+                {
+                    list9[j] = sudoku[i][j];
+                }
+                if (!validationList9(list9, ("ligne " + i)))
+                    error = true;
+            }
+
+            for (int j = 0; j < 9; j++)
+            {
+                int[] list9 = new int[9];
+                for (int i = 0; i < 9; i++)
+                {
+                    list9[i] = sudoku[i][j];
+                }
+                if (!validationList9(list9, ("colonne " + j)))
+                    error = true;
+            }
+
+            for (int ii = 0; ii < 3; ii++)
+            {
+                for (int jj = 0; jj < 3; jj++)
+                {
+                    int[] list9 = new int[9];
+                    for (int i = 0; i < 3; i++)
+                    {
+                        for (int j = 0; j < 3; j++)
+                        {
+                            list9[i * 3 + j] = sudoku[ii * 3 + i][jj * 3 + j];
+                        }
+                    }
+                    if (!validationList9(list9, ("bloc [" + ii + "][" + jj + "]")))
+                        error = true;
+                }
+            }
+
+            if (error)
+            {
+                Console.WriteLine("!!! ECHEC !!! : Ce sudoku n'est pas validé");
+                return false;
+            }
+            else
+                Console.WriteLine("!!! FELICITATION !!! : Ce sudoku est validé");
+            return true;
+        }
+
         /*--------------------Outils--------------------*/
 
         public int[][] stringToSudoku(String stringSudoku)  //Transforme un String en sudoku (tableau de int[9][9])
-        {//---------------------------A COMPLETER---------------------------------------------------------------------------------------------------------A COMPLETER
+        {//---------------------------A COMPLETER---------------------------------------------------------------------------------------------------------A COMPLETER  (taille du string, prendre en compte les points et tirets)
             int[][] sudoku;
             sudoku = new int[9][];
 
@@ -178,6 +262,47 @@ namespace SudokuIA2
                 return false;
             }
 
+            return true;
+        }
+
+        public bool validationList9(int[] list9, String log)  //Valide qu'une list contient bien les 9 chiffres attendu
+        {
+            if (list9.Length != 9)
+            {
+                Console.WriteLine("!!! WARNING !!! : Nombre d'éléments incorect (" + log + ")");
+                return false;
+            }
+
+            bool flag;
+            do
+            {
+                flag = false;
+                for (int k = 0; k < 8; k++)
+                {
+                    if (list9[k] > list9[k + 1])
+                    {
+                        int buffer = list9[k];
+                        list9[k] = list9[k + 1];
+                        list9[k + 1] = buffer;
+                        flag = true;
+                    }
+                }
+            } while (flag);
+
+            for (int k = 0; k < 9; k++)
+            {
+                if (list9[k] == 0)
+                {
+                    Console.WriteLine("!!! ERROR !!! : Solution non valide : il y a encore un 0 (" + log + ")");
+                    return false;
+                }
+                if (k != 8)
+                    if (list9[k] == list9[k + 1])
+                    {
+                        Console.WriteLine("!!! ERROR !!! : Solution non valide : il y a un doublons (" + log + ")");
+                        return false;
+                    }
+            }
             return true;
         }
     }

@@ -10,16 +10,30 @@ namespace SudokuIA2
 
             Sudoku sudoku = new Sudoku();
 
-            String solved = "483921657967345821251876493548132976729564138136798245372689514814253769965417382";
+            String solved = "483921657967345821251876493548132976729564138136798245372689514814253769695417382";
 
+            int[][] sudo = new int[9][];
+            for (int i = 0; i < 9; i++)
+            {
+                sudo[i] = new int[9];
+            }
 
+            sudo = sudoku.stringToSudoku(solved);
 
             sudoku.showInitialSudoku();
+            sudoku.show(sudo);
 
-            sudoku.setSudoku(sudoku.stringToSudoku(solved));
-            sudoku.showSudoku();
+            sudoku.validation(sudo);
 
-            Console.WriteLine("laaaaa");
+
+
+
+
+
+            //sudoku.setSudoku(sudoku.stringToSudoku(solved));
+
+
+            Console.WriteLine("FIIIIIN");
         }
     }
 }
