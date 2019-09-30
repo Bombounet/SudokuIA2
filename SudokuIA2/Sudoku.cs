@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,30 +8,30 @@ namespace SudokuIA2
     class Sudoku
     {
 
-        private readonly int[][] initialSudoku;  //Sudoku original et vide (ne peut etre modifiÃ©)
-        private int[][] wokrkingSudoku;  //Sudoku sur lequel vous allez travailler 
+        private readonly int[][] initialSudoku;  //Sudoku original et vide (ne peut être modifié)
+        private int[][] workingSudoku;  //Sudoku sur lequel vous allez travailler 
 
 
         /*--------------------Constructeur--------------------*/
         public Sudoku()  //Constructeur
         {
             initialSudoku = new int[9][];
-            wokrkingSudoku = new int[9][];
+            workingSudoku = new int[9][];
             for (int i = 0; i < 9; i++)
             {
                 initialSudoku[i] = new int[9];
-                wokrkingSudoku[i] = new int[9];
+                workingSudoku[i] = new int[9];
             }
             //---------------------------A COMPLETER---------------------------------------------------------------------------------------------------------A COMPLETER
             String init = "003020600900305001001806400008102900700000008006708200002609500800203009005010300";
 
             initialSudoku = stringToSudoku(init);
-            wokrkingSudoku = stringToSudoku(init);
+            workingSudoku = stringToSudoku(init);
         }
 
         /*--------------------Getter & Setter--------------------*/
 
-        public int[][] getInitialSudoku(int[][] sudoku)  //RecupÃ©re le sudoku initiale
+        public int[][] getInitialSudoku(int[][] sudoku)  //récupèrele sudoku initiale
         {
             sudoku = new int[9][];
             for (int i = 0; i < 9; i++)
@@ -45,12 +45,12 @@ namespace SudokuIA2
             return sudoku;
         }
 
-        public int getCaseInitialSudoku(int line, int column)  //RecupÃ©re une case du sudoku initiale
+        public int getCaseInitialSudoku(int line, int column)  //récupèreune case du sudoku initiale
         {
             return initialSudoku[line][column];
         }
 
-        public int[][] getSudoku(int[][] sudoku)  //RecupÃ©re le sudoku de "travail"
+        public int[][] getSudoku(int[][] sudoku)  //récupèrele sudoku de "travail"
         {
             sudoku = new int[9][];
             for (int i = 0; i < 9; i++)
@@ -58,25 +58,25 @@ namespace SudokuIA2
                 sudoku[i] = new int[9];
                 for (int j = 0; j < 9; j++)
                 {
-                    sudoku[i][j] = wokrkingSudoku[i][j];
+                    sudoku[i][j] = workingSudoku[i][j];
                 }
             }
             return sudoku;
         }
-        public int getCaseSudoku(int line, int column)  //RecupÃ©re une case du sudoku de "travail"
+        public int getCaseSudoku(int line, int column)  //récupère une case du sudoku de "travail"
         {
-            return wokrkingSudoku[line][column];
+            return workingSudoku[line][column];
         }
 
         public bool setSudoku(int[][] sudoku)  //Attribue un nouveau sudoku de "travail" 
         {
-            if (!checkSudoku(sudoku, "setSudoku"))  //Renvoie false si ce n'est pas autorisÃ©
+            if (!checkSudoku(sudoku, "setSudoku"))  //Renvoie false si ce n'est pas autorisé
                 return false;
             for (int i = 0; i < 9; i++)
             {
                 for (int j = 0; j < 9; j++)
                 {
-                    wokrkingSudoku[i][j] = sudoku[i][j];
+                    workingSudoku[i][j] = sudoku[i][j];
                 }
             }
             return true;
@@ -84,23 +84,23 @@ namespace SudokuIA2
 
         public bool setCaseSudoku(int line, int column, int value)  //Attribue une nouvelle case au sudoku de "travail"
         {
-            if (!checkCase(line, column, value, "setCaseSudoku"))  //Renvoie false si ce n'est pas autorisÃ©
+            if (!checkCase(line, column, value, "setCaseSudoku"))  //Renvoie false si ce n'est pas autorisé
                 return false;
 
-            wokrkingSudoku[line][column] = value;
+            workingSudoku[line][column] = value;
 
             return true;
         }
 
         /*--------------------Affichage--------------------*/
-        public void showInitialSudoku()  //Affiche le du sudoku initiale
+        public void showInitialSudoku()  //Affiche le sudoku initial
         {
             show(initialSudoku);
         }
 
         public bool showSudoku()  //Affiche le sudoku de "travail"
         {
-            if (!show(wokrkingSudoku))
+            if (!show(workingSudoku))
                 return false;
             return true;
         }
@@ -147,13 +147,13 @@ namespace SudokuIA2
 
         public bool validationSudoku()  //Valide le sudoku de "travail"
         {
-            if (!validation(wokrkingSudoku))  //Renvoie false si il y a un probleme 
+            if (!validation(workingSudoku))  //Renvoie false s'il y a un probleme 
                 return false;
             return true;
         }
         public bool validation(int[][] sudoku)  //Valide un sudoku  /*--------------------A Optimiser--------------------*/
         {
-            if (!checkSudoku(sudoku, "validation"))  //Renvoie false si il y a un probleme 
+            if (!checkSudoku(sudoku, "validation"))  //Renvoie false s'il y a un problème 
                 return false;
 
             bool error = false;
@@ -199,11 +199,11 @@ namespace SudokuIA2
 
             if (error)
             {
-                Console.WriteLine("        !!! ECHEC !!! : Ce sudoku n'est pas validÃ©");
+                Console.WriteLine("        !!! ECHEC !!! : Ce sudoku n'est pas validé");
                 return false;
             }
             else
-                Console.WriteLine("        !!! FELICITATION !!! : Ce sudoku est validÃ©");
+                Console.WriteLine("        !!! FELICITATION !!! : Ce sudoku est validé");
             return true;
         }
 
@@ -225,7 +225,7 @@ namespace SudokuIA2
             return sudoku;
         }
 
-        public bool checkSudoku(int[][] sudoku, String log)  //Verifie la validitÃ© d'un sudoku (taille 9x9) puis chaque case
+        public bool checkSudoku(int[][] sudoku, String log)  //Vérifie la validité d'un sudoku (taille 9x9) puis chaque case
         {
             if (sudoku.Length != 9)
             {
@@ -236,7 +236,7 @@ namespace SudokuIA2
             {
                 if (sudoku[i].Length != 9)
                 {
-                    Console.WriteLine("        !!! WARNING !!! : Nombre de colonnes incorrect a la ligne " + i + " (" + sudoku.Length + ", au lieu de 9) lors de la commande " + log);
+                    Console.WriteLine("        !!! WARNING !!! : Nombre de colonnes incorrect à la ligne " + i + " (" + sudoku.Length + ", au lieu de 9) lors de la commande " + log);
                     return false;
                 }
                 for (int j = 0; j < 9; j++)
@@ -248,28 +248,28 @@ namespace SudokuIA2
             return true;
         }
 
-        public bool checkCase(int line, int column, int value, String log)  //Verifie la validitÃ© d'une case de sudoku (valeur compris entre 0 et 9 et conforme au sudoku initiale)
+        public bool checkCase(int line, int column, int value, String log)  //Vérifie la validité d'une case de sudoku (valeur comprise entre 0 et 9 et conforme au sudoku initial)
         {
             if (initialSudoku[line][column] != 0 && value != initialSudoku[line][column])
             {
-                Console.WriteLine("        !!! WARNING !!! : Cette case ne peut etre modifiÃ©, c'est une case fixÃ© par le sudoku. (case [" + line + "][" + column + "]) lors de la commande " + log);
+                Console.WriteLine("        !!! WARNING !!! : Cette case ne peut être modifiée, c'est une case fixée par le sudoku. (case [" + line + "][" + column + "]) lors de la commande " + log);
                 return false;
             }
 
             if (value < 0 || value > 9)
             {
-                Console.WriteLine("        !!! WARNING !!! : Valeur non valable Ã  la case [" + line + "][" + column + "] (" + value + ", au lieu de [0,1,2,3,4,5,6,7,8,9]) lors de la commande " + log);
+                Console.WriteLine("        !!! WARNING !!! : Valeur non valable à la case [" + line + "][" + column + "] (" + value + ", au lieu de [0,1,2,3,4,5,6,7,8,9]) lors de la commande " + log);
                 return false;
             }
 
             return true;
         }
 
-        public bool validationList9(int[] list9, String log)  //Valide qu'une list contient bien les 9 chiffres attendu
+        public bool validationList9(int[] list9, String log)  //Valide qu'une liste contient bien les 9 chiffres attendus
         {
             if (list9.Length != 9)
             {
-                Console.WriteLine("        !!! WARNING !!! : Nombre d'Ã©lÃ©ments incorect (" + log + ")");
+                Console.WriteLine("        !!! WARNING !!! : Nombre d'éléments incorrects (" + log + ")");
                 return false;
             }
 
@@ -297,9 +297,9 @@ namespace SudokuIA2
                     return false;
                 }
                 if (k != 8)
-                    if (list9[k] == list9[k + 1])  //Pas de doublons dans le sudoku
+                    if (list9[k] == list9[k + 1])  //Pas de doublon dans le sudoku
                     {
-                        Console.WriteLine("        !!! ERROR !!! : Solution non valide : il y a un doublons (" + log + ")");
+                        Console.WriteLine("        !!! ERROR !!! : Solution non valide : il y a un doublon (" + log + ")");
                         return false;
                     }
             }
