@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SudokuIA2
 {
@@ -24,6 +21,7 @@ namespace SudokuIA2
             }
             //---------------------------A COMPLETER---------------------------------------------------------------------------------------------------------A COMPLETER
             String init = "003020600900305001001806400008102900700000008006708200002609500800203009005010300";
+            String hard = "85...24..72......9..4.........1.7..23.5...9...4...........8..7..17..........36.4.";
 
             initialSudoku = stringToSudoku(init);
             workingSudoku = stringToSudoku(init);
@@ -211,6 +209,12 @@ namespace SudokuIA2
 
         public int[][] stringToSudoku(String stringSudoku)  //Transforme un String en sudoku (tableau de int[9][9])
         {//---------------------------A COMPLETER---------------------------------------------------------------------------------------------------------A COMPLETER  (taille du string, prendre en compte les points et tirets)
+            if (stringSudoku.Length != 81)
+            {
+                Console.WriteLine("        !!! ERROR !!! : Ce String a une taille non conforme pour étre un sudoku");
+                return stringToSudoku("003020600900305001001806400008102900700000008006708200002609500800203009005010300");
+            }
+
             int[][] sudoku;
             sudoku = new int[9][];
 
@@ -219,7 +223,20 @@ namespace SudokuIA2
                 sudoku[i] = new int[9];
                 for (int j = 0; j < 9; j++)
                 {
-                    sudoku[i][j] = stringSudoku[i * 9 + j] - 48; // - 48 pour la conversion de la table ascii
+                    char car = stringSudoku[i * 9 + j];
+                    if (car == '.')
+                        sudoku[i][j] = 0;
+                    else
+                    {
+                        int number = car - 48; // - 48 pour la conversion de la table ascii
+                        if (number < 0 || number > 9)
+                        {
+                            Console.WriteLine("        !!! ERROR !!! : Caractère non valide pour un sudoku");
+                            return stringToSudoku("003020600900305001001806400008102900700000008006708200002609500800203009005010300");
+                        }
+                        else
+                            sudoku[i][j] = number;
+                    }
                 }
             }
             return sudoku;
