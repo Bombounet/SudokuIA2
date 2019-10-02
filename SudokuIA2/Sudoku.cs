@@ -1,11 +1,13 @@
 using System;
+using System.Diagnostics;
+using System.IO;
 
 namespace SudokuIA2
 {
     class Sudoku
     {
 
-        private readonly int[][] initialSudoku;  //Sudoku original et vide (ne peut être modifié)
+        private int[][] initialSudoku;  //Sudoku original et vide (ne peut être modifié)
         private int[][] workingSudoku;  //Sudoku sur lequel vous allez travailler 
 
 
@@ -21,7 +23,6 @@ namespace SudokuIA2
             }
             //---------------------------A COMPLETER---------------------------------------------------------------------------------------------------------A COMPLETER
             String init = "003020600900305001001806400008102900700000008006708200002609500800203009005010300";
-            String hard = "85...24..72......9..4.........1.7..23.5...9...4...........8..7..17..........36.4.";
 
             initialSudoku = stringToSudoku(init);
             workingSudoku = stringToSudoku(init);
@@ -90,7 +91,47 @@ namespace SudokuIA2
             return true;
         }
 
+        /*--------------------Ficher--------------------*/
+
+        public void newEasySudoku(int index)  //Attribue un nouveau Sudoku facile
+        {
+            newSudoku("Sudoku_Easy50.txt", index);
+        }
+
+        public void newHardSudoku(int index)  //Attribue un nouveau Sudoku hard
+        {
+            newSudoku("Sudoku_hardest.txt", index);
+        }
+
+        public void newTop95Sudoku(int index)  //Attribue un nouveau Sudoku du top 95
+        {
+            newSudoku("Sudoku_Top95.txt", index);
+        }
+
+        public void newSudoku(String fileName, int index)  //Attribue un nouveau Sudoku
+        {
+            String sudo = getFile("Sudoku_Top95.txt", index);
+
+            initialSudoku = stringToSudoku(sudo);
+            workingSudoku = stringToSudoku(sudo);
+        }
+
+        public String getFile(String fileName, int index)  //Récupère un String Sudoku d'un fichier 
+        {
+            DirectoryInfo myDirectory = new DirectoryInfo(Environment.CurrentDirectory);
+            String path = Path.Combine(myDirectory.Parent.Parent.Parent.FullName, fileName);
+            String[] lines = File.ReadAllLines(path);
+
+            if (index < 0 || index >= lines.Length)
+            {
+                Random rnd = new Random();
+                index = rnd.Next(lines.Length);
+            }
+            return lines[index];
+        }
+
         /*--------------------Affichage--------------------*/
+
         public void showInitialSudoku()  //Affiche le sudoku initial
         {
             show(initialSudoku);
@@ -102,7 +143,6 @@ namespace SudokuIA2
                 return false;
             return true;
         }
-
 
         public bool show(int[][] sudoku)  //Affiche un sudoku
         {

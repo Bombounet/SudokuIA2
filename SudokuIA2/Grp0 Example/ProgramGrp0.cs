@@ -29,6 +29,9 @@ namespace SudokuIA2.Grp0_Example
 
             sudoku.validationSudoku();
 
+            sudoku.newTop95Sudoku(10);
+            sudoku.showSudoku();
+
         }
 
         public void solve(int[][] tab)
