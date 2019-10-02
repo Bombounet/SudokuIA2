@@ -21,7 +21,7 @@ namespace SudokuIA2
                 initialSudoku[i] = new int[9];
                 workingSudoku[i] = new int[9];
             }
-            //---------------------------A COMPLETER---------------------------------------------------------------------------------------------------------A COMPLETER
+            
             String init = "003020600900305001001806400008102900700000008006708200002609500800203009005010300";
 
             initialSudoku = stringToSudoku(init);
@@ -189,6 +189,7 @@ namespace SudokuIA2
                 return false;
             return true;
         }
+
         public bool validation(int[][] sudoku)  //Valide un sudoku  /*--------------------A Optimiser--------------------*/
         {
             if (!checkSudoku(sudoku, "validation"))  //Renvoie false s'il y a un problème 
@@ -248,7 +249,7 @@ namespace SudokuIA2
         /*--------------------Outils--------------------*/
 
         public int[][] stringToSudoku(String stringSudoku)  //Transforme un String en sudoku (tableau de int[9][9])
-        {//---------------------------A COMPLETER---------------------------------------------------------------------------------------------------------A COMPLETER  (taille du string, prendre en compte les points et tirets)
+        {
             if (stringSudoku.Length != 81)
             {
                 Console.WriteLine("        !!! ERROR !!! : Ce String a une taille non conforme pour étre un sudoku");
