@@ -181,6 +181,71 @@ namespace SudokuIA2
             return true;
         }
 
+        public bool showTwoSudoku()  //Affiche le sudoku initial & le sudoku de "travail"
+        {
+            if (!showTwo(initialSudoku, workingSudoku))
+                return false;
+            return true;
+        }
+
+        public bool showTwo(int[][] sudokuOne, int[][] sudokuTwo)  //Affiche deux sudokus
+        {
+            if (!checkSudoku(sudokuOne, "showTwo"))  //Renvoie false si il y a un probleme 
+                return false;
+            if (!checkSudoku(sudokuTwo, "showTwo"))  //Renvoie false si il y a un probleme 
+                return false;
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.WriteLine("\n");
+            for (int i = 0; i < 9; i++)
+            {
+                if (i == 3 || i == 6)
+                    Console.WriteLine("                ---+---+---        ---+---+---");
+                Console.Write("                ");
+                for (int j = 0; j < 9; j++)
+                {
+                    if (j == 3 || j == 6)
+                        Console.Write("|");
+                    if (sudokuOne[i][j] == 0)
+                        Console.Write(".");
+                    else
+                    {
+                        if (sudokuOne[i][j] != 0 && sudokuOne[i][j] == initialSudoku[i][j])
+                        {
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            Console.Write(sudokuOne[i][j]);
+                            Console.ForegroundColor = ConsoleColor.White;
+                        }
+                        else
+                            Console.Write(sudokuOne[i][j]);
+                    }
+                }
+                Console.Write("        ");
+                for (int j = 0; j < 9; j++)
+                {
+                    if (j == 3 || j == 6)
+                        Console.Write("|");
+                    if (sudokuTwo[i][j] == 0)
+                        Console.Write(".");
+                    else
+                    {
+                        if (sudokuTwo[i][j] != 0 && sudokuTwo[i][j] == initialSudoku[i][j])
+                        {
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            Console.Write(sudokuTwo[i][j]);
+                            Console.ForegroundColor = ConsoleColor.White;
+                        }
+                        else
+                            Console.Write(sudokuTwo[i][j]);
+                    }
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine("\n");
+            return true;
+        }
+
         /*--------------------Validation du Sudoku--------------------*/
 
         public bool validationSudoku()  //Valide le sudoku de "travail"

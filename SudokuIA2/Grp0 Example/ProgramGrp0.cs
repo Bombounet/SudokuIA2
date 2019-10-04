@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Text;
 
 namespace SudokuIA2.Grp0_Example
 {
     class ProgramGrp0
     {
-        Sudoku sudoku;
+        public Sudoku sudoku;
         int[][] sudo;
 
 
@@ -18,27 +17,26 @@ namespace SudokuIA2.Grp0_Example
                 sudo[i] = new int[9];
             }
 
-            /*--------------------Résolution du Sudoku--------------------*/
-
-            solve(sudo);
-
-            /*--------------------Résolution du Sudoku--------------------*/
-
-            sudoku.showInitialSudoku();
-            sudoku.showSudoku();
-
-            sudoku.validationSudoku();
-
-            sudoku.newTop95Sudoku(10);
-            sudoku.showSudoku();
-
         }
 
-        public void solve(int[][] tab)
+        /*--------------------Résolution du Sudoku--------------------*/
+
+        public void solve()
         {
             String solved = "483921657967345821251876493548132976729564138136798245372689514814253769695417382";
-            tab = sudoku.stringToSudoku(solved);
-            sudoku.setSudoku(tab);
+            sudo = sudoku.stringToSudoku(solved);
+            sudoku.setSudoku(sudo);
+            int nb = 15000;
+            int clc = 0;
+            for (int i = 0; i < nb; i++)
+            {
+                for (int j = 0; j < nb; j++)
+                {
+                        clc += i * j;
+                }
+            }
         }
+
+        /*-----------------------------------------------------------*/
     }
 }
