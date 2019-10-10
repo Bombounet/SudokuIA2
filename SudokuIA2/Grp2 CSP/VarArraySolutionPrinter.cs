@@ -14,15 +14,7 @@ namespace SudokuIA2.Grp2_CSP
 
         public override void OnSolutionCallback()
         {
-            {
-                for(int i = 0; i < 9; i++)
-                {
-                    for (int j = 0; j < 9; j++)
-                    {
-                        Console.WriteLine(String.Format("  {0} = {1}", variables[i][j].ShortString(), Value(variables[i][j])));
-                    }
-                }
-            }
+            //fix valide par le grp 2 (FD)
         }
 
         public int[][] getValues()
