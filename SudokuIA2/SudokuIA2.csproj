@@ -9,4 +9,8 @@
 	<Folder Include="Grp0 Example\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Google.OrTools" Version="7.3.7083" />
+  </ItemGroup>
+
 </Project>
