@@ -428,6 +428,14 @@ namespace SudokuIA2
             }
             return true;
         }
+
+        public int getNbLine(String fileName)  //Récupère le nombre de sudoku disponible dans un fichier
+        {
+            DirectoryInfo myDirectory = new DirectoryInfo(Environment.CurrentDirectory);
+            String path = Path.Combine(myDirectory.Parent.Parent.Parent.FullName, fileName);
+            String[] lines = File.ReadAllLines(path);
+            return lines.Length;
+        }
     }
 }
 
