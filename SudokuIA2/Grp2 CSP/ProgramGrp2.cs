@@ -4,16 +4,18 @@ using Google.OrTools.Sat;
 
 namespace SudokuIA2.Grp2_CSP
 {
-    class ProgramGrp2
+    class ProgramGrp2 : ISudokuSolver
     {
-        public Sudoku sudoku;
+        public Sudoku Sudoku { get; set; }
+        public string Name { get; }
 
         public ProgramGrp2()
         {
-            sudoku = new Sudoku();
+            Sudoku = new Sudoku();
+            Name = "Grp2 CSP";
         }
 
-        public void solve()
+        public void Solve()
         {
             CpModel model = new CpModel();
             int num_vals = 9;
@@ -27,10 +29,10 @@ namespace SudokuIA2.Grp2_CSP
             {
                 for (int j = 0; j < 9; j++)
                 {
-                    if (sudoku.getCaseInitialSudoku(i, j) == 0)
+                    if (Sudoku.getCaseInitialSudoku(i, j) == 0)
                         grid[i][j] = model.NewIntVar(1, num_vals, "C" + i.ToString() + j.ToString());
                     else
-                        grid[i][j] = model.NewIntVar(sudoku.getCaseInitialSudoku(i, j), sudoku.getCaseInitialSudoku(i, j), "C" + i.ToString() + j.ToString());
+                        grid[i][j] = model.NewIntVar(Sudoku.getCaseInitialSudoku(i, j), Sudoku.getCaseInitialSudoku(i, j), "C" + i.ToString() + j.ToString());
                 }
             }
 
@@ -64,8 +66,8 @@ namespace SudokuIA2.Grp2_CSP
             {
                 for (int j = 0; j < 9; j++)
                 {
-                    if (sudoku.getCaseSudoku(i, j) == 0)
-                        sudoku.setCaseSudoku(i, j, values[i][j]);
+                    if (Sudoku.getCaseSudoku(i, j) == 0)
+                        Sudoku.setCaseSudoku(i, j, values[i][j]);
                 }
             }
         }
