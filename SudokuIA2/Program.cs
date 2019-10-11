@@ -151,14 +151,14 @@ namespace SudokuIA2
         public static void benchmark(String fileName)
         {
             int nbTest = 5;
-            double[] scores = new double[nbTest];
+            float[] scores = new float[nbTest];
             String[] lines = sudoku.getFile(fileName);
 
             for (int i = 1; i <= nbTest; i++)
             {
                 for (int j = 0; j < lines.Length; j++)
                 {
-                    double score = testSolution(i, lines[j]);
+                    float score = testSolution(i, lines[j]);
                     if (score == -1)
                     {
                         scores[i - 1] = -1;
@@ -180,10 +180,10 @@ namespace SudokuIA2
             Console.WriteLine("\n        /*--------------------FIN Résultat du Benchmark--------------------*/\n");
         }
 
-        public static double testSolution(int choix, String sudoku)
+        public static float testSolution(int choix, String sudoku)
         {
             var watch = Stopwatch.StartNew();
-            double elapsedMs = watch.ElapsedMilliseconds;
+            float elapsedMs = watch.ElapsedMilliseconds;
             switch (choix)
             {
                 case 0:
