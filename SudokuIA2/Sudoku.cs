@@ -21,7 +21,7 @@ namespace SudokuIA2
                 initialSudoku[i] = new int[9];
                 workingSudoku[i] = new int[9];
             }
-            
+
             String init = "003020600900305001001806400008102900700000008006708200002609500800203009005010300";
 
             initialSudoku = stringToSudoku(init);
@@ -258,8 +258,6 @@ namespace SudokuIA2
             if (!checkSudoku(sudoku, "validation"))  //Renvoie false s'il y a un problème 
                 return false;
 
-            bool error = false;
-
             for (int i = 0; i < 9; i++)  //Validation des lignes
             {
                 int[] list9 = new int[9];
@@ -268,7 +266,7 @@ namespace SudokuIA2
                     list9[j] = sudoku[i][j];
                 }
                 if (!validationList9(list9, ("ligne " + i)))
-                    error = true;
+                    return false;
             }
 
             for (int j = 0; j < 9; j++)  //Validation des colonnes
@@ -279,7 +277,7 @@ namespace SudokuIA2
                     list9[i] = sudoku[i][j];
                 }
                 if (!validationList9(list9, ("colonne " + j)))
-                    error = true;
+                    return false;
             }
 
             for (int ii = 0; ii < 3; ii++)  //Validation des blocs
@@ -295,17 +293,10 @@ namespace SudokuIA2
                         }
                     }
                     if (!validationList9(list9, ("bloc [" + ii + "][" + jj + "]")))
-                        error = true;
+                        return false;
                 }
             }
 
-            if (error)
-            {
-                Console.WriteLine("        !!! ECHEC !!! : Ce sudoku n'est pas validé");
-                return false;
-            }
-            else
-                Console.WriteLine("        !!! FELICITATION !!! : Ce sudoku est validé");
             return true;
         }
 
