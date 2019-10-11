@@ -5,10 +5,12 @@ namespace SudokuIA2
 {
     class Program
     {
-
+        static Sudoku sudoku;
 
         static void Main(string[] args)
         {
+            sudoku = new Sudoku();
+
             bool Quitter = false;
 
             do
@@ -23,8 +25,11 @@ namespace SudokuIA2
                 Console.WriteLine("                5. Groupe 5 Norving");
                 Console.WriteLine("                6. ");
                 Console.WriteLine("                7. ");
-                Console.WriteLine("                8. Benchmark");
+                Console.WriteLine("                8. ");
                 Console.WriteLine("                9. Quitter");
+                Console.WriteLine("                10. Benchmark Easy");
+                Console.WriteLine("                11. Benchmark Hardest");
+                Console.WriteLine("                12. Benchmark Top 95");
 
                 Console.WriteLine("\n                Que voulez vous faire ?");
 
@@ -125,149 +130,124 @@ namespace SudokuIA2
                     case 9:
                         Quitter = true;
                         break;
+                    case 10:
+                        benchmark("Sudoku_Easy50.txt");
+                        break;
+                    case 11:
+                        benchmark("Sudoku_hardest.txt");
+                        break;
+                    case 12:
+                        benchmark("Sudoku_Top95.txt");
+                        break;
                     default:
                         break;
                 }
-
-
-                if (choix == 8)
-                {
-                    int nbTest = 5;
-                    int[] score = new int[nbTest];
-
-
-
-
-                    for (int i = 1; i <= nbTest; i++)
-                    {
-                        score[i-1] = testSolution(i);
-                    }
-
-
-
-                    Console.WriteLine("\n        /*--------------------Résultat des Tests--------------------*/\n");
-                    for (int i = 1; i <= nbTest; i++)
-                    {
-                        String msg = "";
-                        if (score[i-1] == -1)
-                            msg = "Non validé";
-                        else
-                            msg = "Validé";
-                        Console.WriteLine("        Groupe " + i + " : " + msg + " en " + score[i-1] + "ms\n");
-                    }
-                    Console.WriteLine("\n        /*--------------------FIN Résultat des Tests--------------------*/\n");
-                }
-                else if (0 <= choix && choix <= 7)
-                {
-                    testSolution(choix);
-                }
-
 
             } while (!Quitter);
 
             Console.WriteLine("\n\n\n        FIIIIIN");
         }
 
+        public static void benchmark(String fileName)
+        {
+            int nbTest = 5;
+            int[] scores = new int[nbTest];
+            String[] lines = sudoku.getFile(fileName);
 
-        public static int testSolution(int choix)
+            for (int i = 1; i <= nbTest; i++)
+            {
+                for (int j = 0; j < lines.Length; j++)
+                {
+                    int score = testSolution(i, lines[j]);
+                    if (score == -1)
+                    {
+                        scores[i - 1] = -1;
+                        break;
+                    }
+                    scores[i - 1] += score;
+                }
+            }
+
+            Console.WriteLine("\n        /*--------------------Résultat du Benchmark--------------------*/\n");
+            for (int i = 1; i <= nbTest; i++)
+            {
+                if (scores[i - 1] == -1)
+                    Console.WriteLine("        Groupe " + i + " : Non validé\n");
+                else
+                    Console.WriteLine("        Groupe " + i + " : Validé en " + scores[i - 1] + "ms\n");
+            }
+            Console.WriteLine("\n        /*--------------------FIN Résultat du Benchmark--------------------*/\n");
+        }
+
+        public static int testSolution(int choix, String sudoku)
         {
             var watch = Stopwatch.StartNew();
             var elapsedMs = watch.ElapsedMilliseconds;
             switch (choix)
             {
                 case 0:
-                    Console.WriteLine("\n        /*--------------------Groupe 0 Example--------------------*/\n");
                     Grp0_Example.ProgramGrp0 grp0 = new Grp0_Example.ProgramGrp0();
                     watch = Stopwatch.StartNew();
                     grp0.solve();
                     watch.Stop();
                     elapsedMs = watch.ElapsedMilliseconds;
-                    Console.WriteLine("\n\n                SOLVED IN : " + elapsedMs + " ms\n\n");
                     if (!grp0.sudoku.validationSudoku())
-                        elapsedMs = -1;
-                    grp0.sudoku.showTwoSudoku();
-                    Console.WriteLine("\n        /*--------------------FIN Groupe 0 Example--------------------*/\n");
+                        return -1;
                     break;
                 case 1:
-                    Console.WriteLine("\n        /*--------------------Groupe 1 Genetic--------------------*/\n");
                     Grp1_Genetic.ProgramGrp1 grp1 = new Grp1_Genetic.ProgramGrp1();
                     watch = Stopwatch.StartNew();
                     grp1.solve();
                     watch.Stop();
                     elapsedMs = watch.ElapsedMilliseconds;
-                    Console.WriteLine("\n\n                SOLVED IN : " + elapsedMs + " ms\n\n");
                     if (!grp1.sudoku.validationSudoku())
-                        elapsedMs = -1;
-                    grp1.sudoku.showTwoSudoku();
-                    Console.WriteLine("\n        /*--------------------FIN Groupe 1 Genetic--------------------*/\n");
+                        return -1;
                     break;
                 case 2:
-                    Console.WriteLine("\n        /*--------------------Groupe 2 CSP--------------------*/\n");
                     Grp2_CSP.ProgramGrp2 grp2 = new Grp2_CSP.ProgramGrp2();
                     watch = Stopwatch.StartNew();
                     grp2.solve();
                     watch.Stop();
                     elapsedMs = watch.ElapsedMilliseconds;
-                    Console.WriteLine("\n\n                SOLVED IN : " + elapsedMs + " ms\n\n");
                     if (!grp2.sudoku.validationSudoku())
-                        elapsedMs = -1;
-                    grp2.sudoku.showTwoSudoku();
-                    Console.WriteLine("\n        /*--------------------FIN Groupe 2 CSP--------------------*/\n");
+                        return -1;
                     break;
                 case 3:
-                    Console.WriteLine("\n        /*--------------------Groupe 3 SMT--------------------*/\n");
                     Grp3_SMT.ProgramGrp3 grp3 = new Grp3_SMT.ProgramGrp3();
                     watch = Stopwatch.StartNew();
                     grp3.solve();
                     watch.Stop();
                     elapsedMs = watch.ElapsedMilliseconds;
-                    Console.WriteLine("\n\n                SOLVED IN : " + elapsedMs + " ms\n\n");
                     if (!grp3.sudoku.validationSudoku())
-                        elapsedMs = -1;
-                    grp3.sudoku.showTwoSudoku();
-                    Console.WriteLine("\n        /*--------------------FIN Groupe 3 SMT--------------------*/\n");
+                        return -1;
                     break;
                 case 4:
-                    Console.WriteLine("\n        /*--------------------Groupe 4 DancingLinks--------------------*/\n");
                     Grp4_DancingLinks.ProgramGrp4 grp4 = new Grp4_DancingLinks.ProgramGrp4();
                     watch = Stopwatch.StartNew();
                     grp4.solve();
                     watch.Stop();
                     elapsedMs = watch.ElapsedMilliseconds;
-                    Console.WriteLine("\n\n                SOLVED IN : " + elapsedMs + " ms\n\n");
                     if (!grp4.sudoku.validationSudoku())
-                        elapsedMs = -1;
-                    grp4.sudoku.showTwoSudoku();
-                    Console.WriteLine("\n        /*--------------------FIN Groupe 4 DancingLinks--------------------*/\n");
+                        return -1;
                     break;
                 case 5:
-                    Console.WriteLine("\n        /*--------------------Groupe 5 Norving--------------------*/\n");
                     Grp5_Norving.ProgramGrp5 grp5 = new Grp5_Norving.ProgramGrp5();
                     watch = Stopwatch.StartNew();
                     grp5.solve();
                     watch.Stop();
                     elapsedMs = watch.ElapsedMilliseconds;
-                    Console.WriteLine("\n\n                SOLVED IN : " + elapsedMs + " ms\n\n");
                     if (!grp5.sudoku.validationSudoku())
                         elapsedMs = -1;
-                    grp5.sudoku.showTwoSudoku();
-                    Console.WriteLine("\n        /*--------------------FIN Groupe 5 Norving--------------------*/\n");
                     break;
                 case 6:
-                    Console.WriteLine("        Pas de groupe");
                     return -1;
                 case 7:
-                    Console.WriteLine("        Pas de groupe");
                     return -1;
                 default:
                     return -1;
             }
             return (int)elapsedMs;
         }
-
-
-
-
     }
 }
 
