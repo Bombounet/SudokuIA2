@@ -3,23 +3,29 @@ using System.Text;
 
 namespace SudokuIA2.Grp4_DancingLinks
 {
-    class ProgramGrp4
+   
+
+    class ProgramGrp4:ISudokuSolver
     {
-        public Sudoku sudoku;
+        //public Sudoku sudoku;
         private DlxSudokuSolver s = new DlxSudokuSolver(); 
 
         public ProgramGrp4()
         {
-            sudoku = new Sudoku();
-            s.sudoku = sudoku;
+            Sudoku = new Sudoku();
+            s.sudoku = Sudoku;
         }
 
-        public void solve()
+        public Sudoku Sudoku { get ; set ; }
+
+        public void Solve()
         {
             //Résoudre le sudoku ici
-            s.sudoku = sudoku;
+            s.sudoku = Sudoku;
             s.Solve();
-            sudoku = s.sudoku;
+            Sudoku = s.sudoku;
         }
+
+      
     }
 }

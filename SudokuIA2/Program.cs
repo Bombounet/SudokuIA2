@@ -1,8 +1,19 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace SudokuIA2
 {
+
+    interface ISudokuSolver
+    {
+
+        Sudoku Sudoku { get; set; }
+
+        void Solve();
+
+    }
+
     class Program
     {
         static Sudoku sudoku;
@@ -23,13 +34,10 @@ namespace SudokuIA2
                 Console.WriteLine("                3. Groupe 3 SMT");
                 Console.WriteLine("                4. Groupe 4 Dancing Links");
                 Console.WriteLine("                5. Groupe 5 Norving");
-                Console.WriteLine("                6. ");
-                Console.WriteLine("                7. ");
-                Console.WriteLine("                8. ");
+                Console.WriteLine("                6. Benchmark Easy");
+                Console.WriteLine("                7. Benchmark Hardest");
+                Console.WriteLine("                8. Benchmark Top 95");
                 Console.WriteLine("                9. Quitter");
-                Console.WriteLine("                10. Benchmark Easy");
-                Console.WriteLine("                11. Benchmark Hardest");
-                Console.WriteLine("                12. Benchmark Top 95");
 
                 Console.WriteLine("\n                Que voulez vous faire ?");
 
@@ -96,13 +104,13 @@ namespace SudokuIA2
                         Console.WriteLine("\n        /*--------------------Groupe 4 DancingLinks--------------------*/\n");
                         Grp4_DancingLinks.ProgramGrp4 grp4 = new Grp4_DancingLinks.ProgramGrp4();
                         watch = Stopwatch.StartNew();
-                        grp4.solve();
+                        grp4.Solve();
                         watch.Stop();
                         elapsedMs = watch.ElapsedMilliseconds;
                         Console.WriteLine("\n\n                SOLVED IN : " + elapsedMs + " ms\n\n");
-                        if (!grp4.sudoku.validationSudoku())
+                        if (!grp4.Sudoku.validationSudoku())
                             elapsedMs = -1;
-                        grp4.sudoku.showTwoSudoku();
+                        grp4.Sudoku.showTwoSudoku();
                         Console.WriteLine("\n        /*--------------------FIN Groupe 4 DancingLinks--------------------*/\n");
                         break;
                     case 5:
@@ -119,25 +127,16 @@ namespace SudokuIA2
                         Console.WriteLine("\n        /*--------------------FIN Groupe 5 Norving--------------------*/\n");
                         break;
                     case 6:
-                        Console.WriteLine("        Pas de groupe");
+                        benchmark("Sudoku_Easy50.txt");
                         break;
                     case 7:
-                        Console.WriteLine("        Pas de groupe");
+                        benchmark("Sudoku_hardest.txt");
                         break;
                     case 8:
-                        Console.WriteLine("        Pas de groupe");
+                        benchmark("Sudoku_Top95.txt");
                         break;
                     case 9:
                         Quitter = true;
-                        break;
-                    case 10:
-                        benchmark("Sudoku_Easy50.txt");
-                        break;
-                    case 11:
-                        benchmark("Sudoku_hardest.txt");
-                        break;
-                    case 12:
-                        benchmark("Sudoku_Top95.txt");
                         break;
                     default:
                         break;
@@ -182,6 +181,27 @@ namespace SudokuIA2
 
         public static float testSolution(int choix, String sudoku)
         {
+            var solverTypes = new List<Type>();
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                foreach (var objType in assembly.GetTypes())
+                {
+                    if (typeof(ISudokuSolver).IsAssignableFrom(objType)&& !(typeof(ISudokuSolver)==objType))
+                    {
+                        solverTypes.Add(objType);
+                    }
+                }
+            }
+
+            foreach (var objType in solverTypes)
+            {
+                
+                ISudokuSolver solver = (ISudokuSolver)Activator.CreateInstance(objType);
+                Console.WriteLine(solver.Sudoku.showTwoSudoku());
+            }
+
+
+
             var watch = Stopwatch.StartNew();
             float elapsedMs = watch.ElapsedMilliseconds;
             switch (choix)
@@ -215,8 +235,8 @@ namespace SudokuIA2
                     elapsedMs = watch.ElapsedMilliseconds;
                     if (!grp2.sudoku.validationSudoku())
                         return -1;
-                    grp2.sudoku.showTwoSudoku();
-                    Console.WriteLine("        " + elapsedMs + "ms");
+                    //grp2.sudoku.showTwoSudoku();
+                    //Console.WriteLine("        " + elapsedMs + "ms");
                     break;
                 case 3:
                     Grp3_SMT.ProgramGrp3 grp3 = new Grp3_SMT.ProgramGrp3();
@@ -229,16 +249,16 @@ namespace SudokuIA2
                     //grp3.sudoku.showTwoSudoku();
                     break;
                 case 4:
-                    Grp4_DancingLinks.ProgramGrp4 grp4 = new Grp4_DancingLinks.ProgramGrp4();
-                    grp4.sudoku.newSudoku(sudoku);
+                    ISudokuSolver grp4 = new Grp4_DancingLinks.ProgramGrp4();
+                    grp4.Sudoku.newSudoku(sudoku);
                     watch = Stopwatch.StartNew();
-                    grp4.solve();
+                    grp4.Solve();
                     watch.Stop();
                     elapsedMs = watch.ElapsedMilliseconds;
-                    if (!grp4.sudoku.validationSudoku())
+                    if (!grp4.Sudoku.validationSudoku())
                         return -1;
-                    grp4.sudoku.showTwoSudoku();
-                    Console.WriteLine("        " + elapsedMs + "ms");
+                    //grp4.sudoku.showTwoSudoku();
+                    //Console.WriteLine("        " + elapsedMs + "ms");
                     break;
                 case 5:
                     Grp5_Norving.ProgramGrp5 grp5 = new Grp5_Norving.ProgramGrp5();
