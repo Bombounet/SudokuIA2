@@ -151,14 +151,14 @@ namespace SudokuIA2
         public static void benchmark(String fileName)
         {
             int nbTest = 5;
-            int[] scores = new int[nbTest];
+            double[] scores = new double[nbTest];
             String[] lines = sudoku.getFile(fileName);
 
             for (int i = 1; i <= nbTest; i++)
             {
                 for (int j = 0; j < lines.Length; j++)
                 {
-                    int score = testSolution(i, lines[j]);
+                    double score = testSolution(i, lines[j]);
                     if (score == -1)
                     {
                         scores[i - 1] = -1;
@@ -169,20 +169,21 @@ namespace SudokuIA2
             }
 
             Console.WriteLine("\n        /*--------------------Résultat du Benchmark--------------------*/\n");
+            Console.WriteLine("        " + lines.Length + " sodokus : " + fileName + "\n");
             for (int i = 1; i <= nbTest; i++)
             {
                 if (scores[i - 1] == -1)
                     Console.WriteLine("        Groupe " + i + " : Non validé\n");
                 else
-                    Console.WriteLine("        Groupe " + i + " : Validé en " + scores[i - 1] + "ms\n");
+                    Console.WriteLine("        Groupe " + i + " : Validé en " + scores[i - 1] + "ms  (" + (scores[i - 1] / lines.Length) + " ms/sodoku)\n");
             }
             Console.WriteLine("\n        /*--------------------FIN Résultat du Benchmark--------------------*/\n");
         }
 
-        public static int testSolution(int choix, String sudoku)
+        public static double testSolution(int choix, String sudoku)
         {
             var watch = Stopwatch.StartNew();
-            var elapsedMs = watch.ElapsedMilliseconds;
+            double elapsedMs = watch.ElapsedMilliseconds;
             switch (choix)
             {
                 case 0:
@@ -193,6 +194,7 @@ namespace SudokuIA2
                     elapsedMs = watch.ElapsedMilliseconds;
                     if (!grp0.sudoku.validationSudoku())
                         return -1;
+                    //grp0.sudoku.showTwoSudoku();
                     break;
                 case 1:
                     Grp1_Genetic.ProgramGrp1 grp1 = new Grp1_Genetic.ProgramGrp1();
@@ -202,15 +204,19 @@ namespace SudokuIA2
                     elapsedMs = watch.ElapsedMilliseconds;
                     if (!grp1.sudoku.validationSudoku())
                         return -1;
+                    //grp1.sudoku.showTwoSudoku();
                     break;
                 case 2:
                     Grp2_CSP.ProgramGrp2 grp2 = new Grp2_CSP.ProgramGrp2();
+                    grp2.sudoku.newSudoku(sudoku);
                     watch = Stopwatch.StartNew();
                     grp2.solve();
                     watch.Stop();
                     elapsedMs = watch.ElapsedMilliseconds;
                     if (!grp2.sudoku.validationSudoku())
                         return -1;
+                    grp2.sudoku.showTwoSudoku();
+                    Console.WriteLine("        " + elapsedMs + "ms");
                     break;
                 case 3:
                     Grp3_SMT.ProgramGrp3 grp3 = new Grp3_SMT.ProgramGrp3();
@@ -220,15 +226,19 @@ namespace SudokuIA2
                     elapsedMs = watch.ElapsedMilliseconds;
                     if (!grp3.sudoku.validationSudoku())
                         return -1;
+                    //grp3.sudoku.showTwoSudoku();
                     break;
                 case 4:
                     Grp4_DancingLinks.ProgramGrp4 grp4 = new Grp4_DancingLinks.ProgramGrp4();
+                    grp4.sudoku.newSudoku(sudoku);
                     watch = Stopwatch.StartNew();
                     grp4.solve();
                     watch.Stop();
                     elapsedMs = watch.ElapsedMilliseconds;
                     if (!grp4.sudoku.validationSudoku())
                         return -1;
+                    grp4.sudoku.showTwoSudoku();
+                    Console.WriteLine("        " + elapsedMs + "ms");
                     break;
                 case 5:
                     Grp5_Norving.ProgramGrp5 grp5 = new Grp5_Norving.ProgramGrp5();
@@ -238,6 +248,7 @@ namespace SudokuIA2
                     elapsedMs = watch.ElapsedMilliseconds;
                     if (!grp5.sudoku.validationSudoku())
                         elapsedMs = -1;
+                    //grp5.sudoku.showTwoSudoku();
                     break;
                 case 6:
                     return -1;

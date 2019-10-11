@@ -95,25 +95,23 @@ namespace SudokuIA2
 
         public void newEasySudoku(int index)  //Attribue un nouveau Sudoku facile
         {
-            newSudoku("Sudoku_Easy50.txt", index);
+            newSudoku(getLine("Sudoku_Easy50.txt", index));
         }
 
         public void newHardSudoku(int index)  //Attribue un nouveau Sudoku hard
         {
-            newSudoku("Sudoku_hardest.txt", index);
+            newSudoku(getLine("Sudoku_hardest.txt", index));
         }
 
         public void newTop95Sudoku(int index)  //Attribue un nouveau Sudoku du top 95
         {
-            newSudoku("Sudoku_Top95.txt", index);
+            newSudoku(getLine("Sudoku_Top95.txt", index));
         }
 
-        public void newSudoku(String fileName, int index)  //Attribue un nouveau Sudoku
+        public void newSudoku(String sudoku)  //Attribue un nouveau Sudoku
         {
-            String sudo = getLine("Sudoku_Top95.txt", index);
-
-            initialSudoku = stringToSudoku(sudo);
-            workingSudoku = stringToSudoku(sudo);
+            initialSudoku = stringToSudoku(sudoku);
+            workingSudoku = stringToSudoku(sudoku);
         }
 
         public String getLine(String fileName, int index)  //Récupère un String Sudoku d'un fichier 

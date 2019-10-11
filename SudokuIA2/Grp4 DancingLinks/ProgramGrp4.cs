@@ -17,6 +17,7 @@ namespace SudokuIA2.Grp4_DancingLinks
         public void solve()
         {
             //Résoudre le sudoku ici
+            s.sudoku = sudoku;
             s.Solve();
             sudoku = s.sudoku;
         }
