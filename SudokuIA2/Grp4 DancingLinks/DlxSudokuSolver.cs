@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System;
+=======
+﻿using System.Linq;
+>>>>>>> de597ce4e2aad67c193b656fbca8cfc1c8f24ef7
 
 namespace SudokuIA2.Grp4_DancingLinks
 {

@@ -14,7 +14,7 @@ namespace SudokuIA2.Grp2_CSP
 
         public override void OnSolutionCallback()
         {
-            //fix valide par le grp 2 (FD).
+            //fix valide par le grp 2 (FD)
         }
 
         public int[][] getValues()
