@@ -21,7 +21,7 @@ namespace SudokuIA2
                 initialSudoku[i] = new int[9];
                 workingSudoku[i] = new int[9];
             }
-            
+
             String init = "003020600900305001001806400008102900700000008006708200002609500800203009005010300";
 
             initialSudoku = stringToSudoku(init);
@@ -95,32 +95,28 @@ namespace SudokuIA2
 
         public void newEasySudoku(int index)  //Attribue un nouveau Sudoku facile
         {
-            newSudoku("Sudoku_Easy50.txt", index);
+            newSudoku(getLine("Sudoku_Easy50.txt", index));
         }
 
         public void newHardSudoku(int index)  //Attribue un nouveau Sudoku hard
         {
-            newSudoku("Sudoku_hardest.txt", index);
+            newSudoku(getLine("Sudoku_hardest.txt", index));
         }
 
         public void newTop95Sudoku(int index)  //Attribue un nouveau Sudoku du top 95
         {
-            newSudoku("Sudoku_Top95.txt", index);
+            newSudoku(getLine("Sudoku_Top95.txt", index));
         }
 
-        public void newSudoku(String fileName, int index)  //Attribue un nouveau Sudoku
+        public void newSudoku(String sudoku)  //Attribue un nouveau Sudoku
         {
-            String sudo = getFile("Sudoku_Top95.txt", index);
-
-            initialSudoku = stringToSudoku(sudo);
-            workingSudoku = stringToSudoku(sudo);
+            initialSudoku = stringToSudoku(sudoku);
+            workingSudoku = stringToSudoku(sudoku);
         }
 
-        public String getFile(String fileName, int index)  //Récupère un String Sudoku d'un fichier 
+        public String getLine(String fileName, int index)  //Récupère un String Sudoku d'un fichier 
         {
-            DirectoryInfo myDirectory = new DirectoryInfo(Environment.CurrentDirectory);
-            String path = Path.Combine(myDirectory.Parent.Parent.Parent.FullName, fileName);
-            String[] lines = File.ReadAllLines(path);
+            String[] lines = getFile(fileName);
 
             if (index < 0 || index >= lines.Length)
             {
@@ -128,6 +124,14 @@ namespace SudokuIA2
                 index = rnd.Next(lines.Length);
             }
             return lines[index];
+        }
+
+        public String[] getFile(String fileName)  //Récupère un tout les Sudokus d'un fichier 
+        {
+            DirectoryInfo myDirectory = new DirectoryInfo(Environment.CurrentDirectory);
+            String path = Path.Combine(myDirectory.Parent.Parent.Parent.FullName, fileName);
+            String[] lines = File.ReadAllLines(path);
+            return lines;
         }
 
         /*--------------------Affichage--------------------*/
@@ -139,9 +143,7 @@ namespace SudokuIA2
 
         public bool showSudoku()  //Affiche le sudoku de "travail"
         {
-            if (!show(workingSudoku))
-                return false;
-            return true;
+            return show(workingSudoku);
         }
 
         public bool show(int[][] sudoku)  //Affiche un sudoku
@@ -183,9 +185,7 @@ namespace SudokuIA2
 
         public bool showTwoSudoku()  //Affiche le sudoku initial & le sudoku de "travail"
         {
-            if (!showTwo(initialSudoku, workingSudoku))
-                return false;
-            return true;
+            return showTwo(initialSudoku, workingSudoku);
         }
 
         public bool showTwo(int[][] sudokuOne, int[][] sudokuTwo)  //Affiche deux sudokus
@@ -250,17 +250,13 @@ namespace SudokuIA2
 
         public bool validationSudoku()  //Valide le sudoku de "travail"
         {
-            if (!validation(workingSudoku))  //Renvoie false s'il y a un probleme 
-                return false;
-            return true;
+            return validation(workingSudoku);  //Renvoie false s'il y a un probleme 
         }
 
         public bool validation(int[][] sudoku)  //Valide un sudoku  /*--------------------A Optimiser--------------------*/
         {
             if (!checkSudoku(sudoku, "validation"))  //Renvoie false s'il y a un problème 
                 return false;
-
-            bool error = false;
 
             for (int i = 0; i < 9; i++)  //Validation des lignes
             {
@@ -270,7 +266,7 @@ namespace SudokuIA2
                     list9[j] = sudoku[i][j];
                 }
                 if (!validationList9(list9, ("ligne " + i)))
-                    error = true;
+                    return false;
             }
 
             for (int j = 0; j < 9; j++)  //Validation des colonnes
@@ -281,7 +277,7 @@ namespace SudokuIA2
                     list9[i] = sudoku[i][j];
                 }
                 if (!validationList9(list9, ("colonne " + j)))
-                    error = true;
+                    return false;
             }
 
             for (int ii = 0; ii < 3; ii++)  //Validation des blocs
@@ -297,17 +293,10 @@ namespace SudokuIA2
                         }
                     }
                     if (!validationList9(list9, ("bloc [" + ii + "][" + jj + "]")))
-                        error = true;
+                        return false;
                 }
             }
 
-            if (error)
-            {
-                Console.WriteLine("        !!! ECHEC !!! : Ce sudoku n'est pas validé");
-                return false;
-            }
-            else
-                Console.WriteLine("        !!! FELICITATION !!! : Ce sudoku est validé");
             return true;
         }
 
