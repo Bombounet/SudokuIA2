@@ -1,5 +1,5 @@
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.IO;
 
 namespace SudokuIA2
@@ -71,6 +71,9 @@ namespace SudokuIA2
         {
             if (!checkSudoku(sudoku, "setSudoku"))  //Renvoie false si ce n'est pas autorisé
                 return false;
+            if (!checkAllCase(sudoku, "setSudoku"))  //Renvoie false si ce n'est pas autorisé
+                return false;
+
             for (int i = 0; i < 9; i++)
             {
                 for (int j = 0; j < 9; j++)
@@ -143,6 +146,10 @@ namespace SudokuIA2
 
         public bool showSudoku()  //Affiche le sudoku de "travail"
         {
+            if (!checkSudoku(workingSudoku, "show"))  //Renvoie false si il y a un probleme 
+                return false;
+            if (!checkAllCase(workingSudoku, "show"))  //Renvoie false si il y a un probleme 
+                return false;
             return show(workingSudoku);
         }
 
@@ -185,6 +192,10 @@ namespace SudokuIA2
 
         public bool showTwoSudoku()  //Affiche le sudoku initial & le sudoku de "travail"
         {
+            if (!checkSudoku(workingSudoku, "showTwo"))  //Renvoie false si il y a un probleme 
+                return false;
+            if (!checkAllCase(workingSudoku, "showTwo"))  //Renvoie false si il y a un probleme 
+                return false;
             return showTwo(initialSudoku, workingSudoku);
         }
 
@@ -257,6 +268,8 @@ namespace SudokuIA2
         {
             if (!checkSudoku(sudoku, "validation"))  //Renvoie false s'il y a un problème 
                 return false;
+            if (!checkAllCase(sudoku, "validation"))  //Renvoie false s'il y a un problème 
+                return false;
 
             for (int i = 0; i < 9; i++)  //Validation des lignes
             {
@@ -300,6 +313,79 @@ namespace SudokuIA2
             return true;
         }
 
+        /*--------------------Génération--------------------*/
+
+        public String create(int dificulty)
+        {
+            if (dificulty < 17 || dificulty > 30)
+                return null;
+
+            int[][] grid = new int[9][];
+            int shuffleLevel = 100;
+
+            for (int i = 0; i < 9; i++)
+            {
+                grid[i] = new int[9];
+                for (int j = 0; j < 9; j++)
+                {
+                    grid[i][j] = (i * 3 + i / 3 + j) % 9 + 1;
+
+                }
+            }
+
+            for (int repeat = 0; repeat < shuffleLevel; repeat++)
+            {
+                Random rand = new Random(Guid.NewGuid().GetHashCode());
+                Random rand2 = new Random(Guid.NewGuid().GetHashCode());
+                ChangeTwoCell(ref grid, rand.Next(1, 9), rand2.Next(1, 9));
+            }
+
+            var cases = new List<int>();
+            Random random = new Random();
+            while (cases.Count != dificulty)
+            {
+                random = new Random();
+                int rnd = random.Next(81);
+                if (!cases.Contains(rnd))
+                    cases.Add(rnd);
+            }
+
+            bool flag;  //Tri de la liste
+            do
+            {
+                flag = false;
+                for (int k = 0; k < (cases.Count - 1); k++)
+                {
+                    if (cases[k] > cases[k + 1])
+                    {
+                        int buffer = cases[k];
+                        cases[k] = cases[k + 1];
+                        cases[k + 1] = buffer;
+                        flag = true;
+                    }
+                }
+            } while (flag);
+
+            int index = 0;
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    if (index < dificulty)
+                    {
+                        if ((i * 9 + j) == cases[index])
+                            index++;
+                        else
+                            grid[i][j] = 0;
+                    }
+                    else
+                        grid[i][j] = 0;
+                }
+            }
+
+            return sudokuToString(grid);
+        }
+
         /*--------------------Outils--------------------*/
 
         public int[][] stringToSudoku(String stringSudoku)  //Transforme un String en sudoku (tableau de int[9][9])
@@ -337,7 +423,25 @@ namespace SudokuIA2
             return sudoku;
         }
 
-        public bool checkSudoku(int[][] sudoku, String log)  //Vérifie la validité d'un sudoku (taille 9x9) puis chaque case
+        public String sudokuToString(int[][] sudoku)
+        {
+            if (!checkSudoku(sudoku, "sudokuToString"))
+                return null;
+
+            String stringSudoku = "";
+
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    stringSudoku += sudoku[i][j];
+                }
+            }
+
+            return stringSudoku;
+        }
+
+        public bool checkSudoku(int[][] sudoku, String log)  //Vérifie la validité d'un sudoku (taille 9x9)
         {
             if (sudoku.Length != 9)
             {
@@ -351,6 +455,14 @@ namespace SudokuIA2
                     Console.WriteLine("        !!! WARNING !!! : Nombre de colonnes incorrect à la ligne " + i + " (" + sudoku.Length + ", au lieu de 9) lors de la commande " + log);
                     return false;
                 }
+            }
+            return true;
+        }
+
+        public bool checkAllCase(int[][] sudoku, String log)  //Vérifie la validité de toutesles cases du sudoku (valeur comprise entre 0 et 9 et conforme au sudoku initial)
+        {
+            for (int i = 0; i < 9; i++)
+            {
                 for (int j = 0; j < 9; j++)
                 {
                     if (!checkCase(i, j, sudoku[i][j], log))
@@ -416,6 +528,38 @@ namespace SudokuIA2
                     }
             }
             return true;
+        }
+
+        private void ChangeTwoCell(ref int[][] grid, int findValue1, int findValue2)
+        {
+            int xParm1, yParm1, xParm2, yParm2;
+            xParm1 = yParm1 = xParm2 = yParm2 = 0;
+            for (int i = 0; i < 9; i += 3)
+            {
+                for (int k = 0; k < 9; k += 3)
+                {
+                    for (int j = 0; j < 3; j++)
+                    {
+                        for (int z = 0; z < 3; z++)
+                        {
+                            if (grid[i + j][k + z] == findValue1)
+                            {
+                                xParm1 = i + j;
+                                yParm1 = k + z;
+
+                            }
+                            if (grid[i + j][k + z] == findValue2)
+                            {
+                                xParm2 = i + j;
+                                yParm2 = k + z;
+
+                            }
+                        }
+                    }
+                    grid[xParm1][yParm1] = findValue2;
+                    grid[xParm2][yParm2] = findValue1;
+                }
+            }
         }
     }
 }
