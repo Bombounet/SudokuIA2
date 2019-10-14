@@ -1,13 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace SudokuIA2.Grp4_DancingLinks
 {
     class DlxSudokuSolver
     {
         public Sudoku sudoku; //= new Sudoku();
-        private DlxLib.Dlx sol = new DlxLib.Dlx();
         private int[,] matrix;
         private const int NBCONSTRAIN = 9 * 9 * 4;
 
@@ -102,16 +100,9 @@ namespace SudokuIA2.Grp4_DancingLinks
 
         public void Solve()
         {
-            //matrixBuilder();
-            //DlxLib.Solution tmp = sol.Solve(matrix).FirstOrDefault();
-            Dlx.MatrixList test = new Dlx.MatrixList(sudoku.getSudoku(null));
-            test.search();
-            sudoku.setSudoku(test.convertMatrixSudoku());
-            //convertSolutionToSudoku(test.rows, matrix);
-           //if (tmp != null)
-            //{
-            //    convertSolutionToSudoku(tmp.RowIndexes, matrix);
-            //}
+            Dlx.MatrixList s = new Dlx.MatrixList(sudoku.getSudoku(null));
+            s.search();
+            sudoku.setSudoku(s.convertMatrixSudoku());
         }
     }
 }

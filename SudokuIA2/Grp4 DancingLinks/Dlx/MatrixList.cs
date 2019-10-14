@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Dlx
 {
     public class MatrixList
     {
         private MatrixNodeHead root;
-        public LinkedList<int> rows = new LinkedList<int>();
+        //public LinkedList<int> rows = new LinkedList<int>();
         private bool stop = false;
         private LinkedList<MatrixNode> O = new LinkedList<MatrixNode>();
         private int[][] sudoku;
