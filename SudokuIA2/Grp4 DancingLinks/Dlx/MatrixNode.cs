@@ -12,6 +12,8 @@ namespace Dlx
         internal MatrixNode down;
         internal MatrixNodeHead item;
         internal int rowIndex;
+        internal int column;
+        internal int value;
 
         public MatrixNode(MatrixNodeHead t){
             item = t;

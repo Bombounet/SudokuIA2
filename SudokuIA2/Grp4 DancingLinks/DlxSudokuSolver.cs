@@ -1,10 +1,6 @@
-<<<<<<< HEAD
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System;
-=======
-﻿using System.Linq;
->>>>>>> de597ce4e2aad67c193b656fbca8cfc1c8f24ef7
 
 namespace SudokuIA2.Grp4_DancingLinks
 {
@@ -106,15 +102,16 @@ namespace SudokuIA2.Grp4_DancingLinks
 
         public void Solve()
         {
-            matrixBuilder();
+            //matrixBuilder();
             //DlxLib.Solution tmp = sol.Solve(matrix).FirstOrDefault();
-            Dlx.MatrixList test = new Dlx.MatrixList(matrix);
-            test.search(0);
-            convertSolutionToSudoku(test.rowIndexes, matrix);
-            /*if (tmp != null)
-            {
-                convertSolutionToSudoku(tmp, matrix);
-            }*/
+            Dlx.MatrixList test = new Dlx.MatrixList(sudoku.getSudoku(null));
+            test.search();
+            sudoku.setSudoku(test.convertMatrixSudoku());
+            //convertSolutionToSudoku(test.rows, matrix);
+           //if (tmp != null)
+            //{
+            //    convertSolutionToSudoku(tmp.RowIndexes, matrix);
+            //}
         }
     }
 }
