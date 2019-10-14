@@ -33,3 +33,6 @@ La class Sudoku :
   - validationSudoku() permet de verrifier que le sudoku de "travail" est conforme aux règles du jeu
 
   - validation() permet de verrifier que le sudoku envoyé en parametre
+
+
+Génération de sudoku inspiré de : https://gist.github.com/fabiosoft/b41067106bebf1498399f4eb9826e4de

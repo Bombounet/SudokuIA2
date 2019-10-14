@@ -16,6 +16,9 @@ namespace SudokuIA2
         static Sudoku sudoku;
         static List<ISudokuSolver> solvers;
 
+        
+
+
         static void Main(string[] args)
         {
             sudoku = new Sudoku();
@@ -46,7 +49,8 @@ namespace SudokuIA2
                 Console.WriteLine("                " + (solvers.Count) + ". Benchmark Easy");
                 Console.WriteLine("                " + (solvers.Count + 1) + ". Benchmark Hardest");
                 Console.WriteLine("                " + (solvers.Count + 2) + ". Benchmark Top 95");
-                Console.WriteLine("                " + (solvers.Count + 3) + ". Quitter");
+                Console.WriteLine("                " + (solvers.Count + 3) + ". Benchmark Custom");
+                Console.WriteLine("                " + (solvers.Count + 4) + ". Quitter");
 
                 Console.WriteLine("\n                Que voulez vous faire ?");
 
@@ -71,17 +75,27 @@ namespace SudokuIA2
                 }
                 else if (choix == solvers.Count)
                 {
-                    benchmark("Sudoku_Easy50.txt");
+                    benchmark(sudoku.getFile("Sudoku_Easy50.txt"));
                 }
                 else if (choix == solvers.Count + 1)
                 {
-                    benchmark("Sudoku_hardest.txt");
+                    benchmark(sudoku.getFile("Sudoku_hardest.txt"));
                 }
                 else if (choix == solvers.Count + 2)
                 {
-                    benchmark("Sudoku_Top95.txt");
+                    benchmark(sudoku.getFile("Sudoku_Top95.txt"));
                 }
                 else if (choix == solvers.Count + 3)
+                {
+                    int nb = 10;
+                    String[] lines = new String[nb];
+                    for (int i = 0; i < nb; i++)
+                    {
+                        lines[i] = sudoku.create(25);
+                    }
+                    benchmark(lines);
+                }
+                else if (choix == solvers.Count + 4)
                 {
                     Quitter = true;
                 }
@@ -92,10 +106,9 @@ namespace SudokuIA2
             Console.ForegroundColor = ConsoleColor.Yellow;
         }
 
-        public static void benchmark(String fileName)
+        public static void benchmark(String[] lines)
         {
             float[] scores = new float[solvers.Count];
-            String[] lines = sudoku.getFile(fileName);
 
             for (int i = 0; i < solvers.Count; i++)
             {
@@ -106,16 +119,16 @@ namespace SudokuIA2
                     if (score == -1)
                     {
                         scores[i] = -1;
-                        Console.WriteLine("        " + fileName + " " + j + " failed validation");
+                        Console.WriteLine("        Sudoku " + j + " failed validation");
                         break;
                     }
                     scores[i] += score;
-                    Console.WriteLine("        " + fileName + " " + j + " success in : " + score + "ms");
+                    Console.WriteLine("        Sudoku " + j + " success in : " + score + "ms");
                 }
             }
 
             Console.WriteLine("\n        /*--------------------Résultat du Benchmark--------------------*/\n");
-            Console.WriteLine("        " + lines.Length + " sodokus : " + fileName + "\n");
+            Console.WriteLine("        " + lines.Length + " sodokus\n");
             for (int i = 0; i < solvers.Count; i++)
             {
                 if (scores[i] == -1)
@@ -138,9 +151,7 @@ namespace SudokuIA2
             elapsedMs = watch.ElapsedMilliseconds;
             if (!solver.Sudoku.validationSudoku())
                 return -1;
-
-            //solver.Sudoku.showTwoSudoku();
-            //Console.WriteLine("        " + elapsedMs + "ms");
+            solver.Sudoku.showTwoSudoku();
 
             return elapsedMs;
         }
