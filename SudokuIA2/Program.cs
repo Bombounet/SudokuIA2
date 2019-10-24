@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 
 namespace SudokuIA2
 {
@@ -16,24 +17,10 @@ namespace SudokuIA2
         static Sudoku sudoku;
         static List<ISudokuSolver> solvers;
 
-        
-
-
         static void Main(string[] args)
         {
             sudoku = new Sudoku();
-
-            solvers = new List<ISudokuSolver>();
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                foreach (var objType in assembly.GetTypes())
-                {
-                    if (typeof(ISudokuSolver).IsAssignableFrom(objType) && !(typeof(ISudokuSolver) == objType))
-                    {
-                        solvers.Add((ISudokuSolver)Activator.CreateInstance(objType));
-                    }
-                }
-            }
+            refreshSolver();
 
             bool Quitter = false;
 
@@ -75,25 +62,44 @@ namespace SudokuIA2
                 }
                 else if (choix == solvers.Count)
                 {
-                    benchmark(sudoku.getFile("Sudoku_Easy50.txt"));
+                    showScore(benchmark(sudoku.getFile("Sudoku_Easy50.txt")), 50, "Easy");
                 }
                 else if (choix == solvers.Count + 1)
                 {
-                    benchmark(sudoku.getFile("Sudoku_hardest.txt"));
+                    showScore(benchmark(sudoku.getFile("Sudoku_hardest.txt")), 11, "Hardest");
                 }
                 else if (choix == solvers.Count + 2)
                 {
-                    benchmark(sudoku.getFile("Sudoku_Top95.txt"));
+                    showScore(benchmark(sudoku.getFile("Sudoku_Top95.txt")), 95, "Top 95");
                 }
                 else if (choix == solvers.Count + 3)
                 {
-                    int nb = 10;
-                    String[] lines = new String[nb];
-                    for (int i = 0; i < nb; i++)
+                    List<Dictionary<String, float>> scores = new List<Dictionary<string, float>>();
+
+                    for (int i = 30; i >= 17; i--)
                     {
-                        lines[i] = sudoku.create(25);
+                        scores.Add(benchmark(customSudoku(i)));
+                        foreach (KeyValuePair<String, float> score in scores[-i + 30])
+                        {
+                            if (score.Value > 5000 || score.Value < 0)
+                            {
+                                for (int j = 0; j < solvers.Count; j++)
+                                {
+                                    if (solvers[j].Name == score.Key)
+                                    {
+                                        solvers.RemoveAt(j);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                     }
-                    benchmark(lines);
+                    refreshSolver();
+                    for (int i = 30; i >= 17; i--)
+                    {
+                        showScore(scores[-i + 30], 10, ""+i);
+                    }
+
                 }
                 else if (choix == solvers.Count + 4)
                 {
@@ -106,37 +112,70 @@ namespace SudokuIA2
             Console.ForegroundColor = ConsoleColor.Yellow;
         }
 
-        public static void benchmark(String[] lines)
+        public static void refreshSolver()
         {
-            float[] scores = new float[solvers.Count];
+            List<ISudokuSolver> solversInvers = new List<ISudokuSolver>();
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                foreach (var objType in assembly.GetTypes())
+                {
+                    if (typeof(ISudokuSolver).IsAssignableFrom(objType) && !(typeof(ISudokuSolver) == objType))
+                    {
+                        solversInvers.Add((ISudokuSolver)Activator.CreateInstance(objType));
+                    }
+                }
+            }
+            solvers = new List<ISudokuSolver>();
+            for(int i = solversInvers.Count-1; i >= 0; i--)
+            {
+                solvers.Add(solversInvers[i]);
+            }
+        }
+
+        public static String[] customSudoku(int dificulty)
+        {
+            int nb = 10;
+            String[] lines = new String[nb];
+            for (int i = 0; i < nb; i++)
+            {
+                lines[i] = sudoku.create(dificulty);
+            }
+
+            return lines;
+        }
+
+        public static Dictionary<String, float> benchmark(String[] lines)
+        {
+            Dictionary<String, float> scores = new Dictionary<String, float>();
 
             for (int i = 0; i < solvers.Count; i++)
             {
+                scores.Add(solvers[i].Name, 0);
                 Console.WriteLine("\n\n        Test " + solvers[i].Name);
                 for (int j = 0; j < lines.Length; j++)
                 {
-                    float score = testSolution(solvers[i], lines[j]);
+                    float score;
+                    try
+                    {
+                        score = testSolution(solvers[i], lines[j]);
+                    }
+                    catch (Exception e)
+                    {
+                        score = -1;
+                        Console.WriteLine("\n\n{0} Exception caught.\n\n", e);
+                    }
                     if (score == -1)
                     {
-                        scores[i] = -1;
+                        scores[solvers[i].Name] = -1;
                         Console.WriteLine("        Sudoku " + j + " failed validation");
                         break;
                     }
-                    scores[i] += score;
+                    scores[solvers[i].Name] += score;
                     Console.WriteLine("        Sudoku " + j + " success in : " + score + "ms");
                 }
             }
 
-            Console.WriteLine("\n        /*--------------------Résultat du Benchmark--------------------*/\n");
-            Console.WriteLine("        " + lines.Length + " sodokus\n");
-            for (int i = 0; i < solvers.Count; i++)
-            {
-                if (scores[i] == -1)
-                    Console.WriteLine("        " + solvers[i].Name + " : Non validé\n");
-                else
-                    Console.WriteLine("        " + solvers[i].Name + " : Validé en " + scores[i] + "ms  (" + (scores[i] / lines.Length) + " ms/sodoku)\n");
-            }
-            Console.WriteLine("\n        /*--------------------FIN Résultat du Benchmark--------------------*/\n");
+            return scores;
         }
 
         public static float testSolution(ISudokuSolver solver, String sudoku)
@@ -156,6 +195,20 @@ namespace SudokuIA2
             }
             //solver.Sudoku.showTwoSudoku();
             return elapsedMs;
+        }
+
+        public static void showScore(Dictionary<String, float> scores, int nbSudoku, String dificulty)
+        {
+            Console.WriteLine("\n        /*--------------------Résultat du Benchmark // Dificulté : " + dificulty + "--------------------*/\n");
+            Console.WriteLine("        " + nbSudoku + " sodokus\n");
+            foreach (KeyValuePair<String, float> score in scores)
+            {
+                if (score.Value == -1)
+                    Console.WriteLine("        " + score.Key + " : Non validé\n");
+                else
+                    Console.WriteLine("        " + score.Key + " : Validé en " + score.Value + "ms  (" + (score.Value / nbSudoku) + " ms/sodoku)\n");
+            }
+            Console.WriteLine("\n        /*--------------------FIN Résultat du Benchmark--------------------*/\n");
         }
     }
 }
