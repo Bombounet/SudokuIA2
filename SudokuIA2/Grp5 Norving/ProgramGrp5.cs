@@ -7,9 +7,11 @@ using Microsoft.Scripting.Hosting;
 
 namespace SudokuIA2.Grp5_Norving
 {
-    class ProgramGrp5
+    class ProgramGrp5 : ISudokuSolver
     {
-        public Sudoku sudoku;
+        public Sudoku Sudoku { get; set; }
+        public string Name { get; }
+
         private ScriptEngine engine = Python.CreateEngine();
         private string script = @"../../../Grp5 Norving/norving.py";
         private ScriptSource source;
@@ -17,11 +19,12 @@ namespace SudokuIA2.Grp5_Norving
 
         public ProgramGrp5()
         {
-            sudoku = new Sudoku();
+            Sudoku = new Sudoku();
+            Name = "Grp5 Norvig";
             source = engine.CreateScriptSourceFromFile(script);
             scope = engine.CreateScope();
 
-            int[][] grid = sudoku.getSudoku(new int[9][]);
+            int[][] grid = Sudoku.getSudoku(new int[9][]);
 
             string gridValues = "";
             foreach (var line in grid)
@@ -34,7 +37,7 @@ namespace SudokuIA2.Grp5_Norving
             engine.GetSysModule().SetVariable("argv", gridValues);
         }
 
-        public void solve()
+        public void Solve()
         {
             source.Execute(scope);
             String gridSolved = scope.GetVariable<string>("gridSolved");
@@ -44,8 +47,8 @@ namespace SudokuIA2.Grp5_Norving
             {
                 for (int j = 0; j < 9; j++)
                 {
-                    if (sudoku.getCaseSudoku(i, j) == 0)
-                        sudoku.setCaseSudoku(i, j, int.Parse(gridSolved[k].ToString()));
+                    if (Sudoku.getCaseSudoku(i, j) == 0)
+                        Sudoku.setCaseSudoku(i, j, int.Parse(gridSolved[k].ToString()));
                     k++;
                 }
             }

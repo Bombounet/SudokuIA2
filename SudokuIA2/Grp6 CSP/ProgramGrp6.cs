@@ -16,7 +16,7 @@ namespace SudokuIA2.Grp6_CSP
         public ProgramGrp6()
         {
             Sudoku = new Sudoku();
-            Name = "Grp 6 CSP";
+            Name = "Grp6 CSP";
         }
 
         public void Solve()

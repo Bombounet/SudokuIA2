@@ -112,7 +112,7 @@ namespace SudokuIA2
 
             for (int i = 0; i < solvers.Count; i++)
             {
-                Console.WriteLine("        Test " + solvers[i].Name);
+                Console.WriteLine("\n\n        Test " + solvers[i].Name);
                 for (int j = 0; j < lines.Length; j++)
                 {
                     float score = testSolution(solvers[i], lines[j]);
@@ -150,9 +150,11 @@ namespace SudokuIA2
             watch.Stop();
             elapsedMs = watch.ElapsedMilliseconds;
             if (!solver.Sudoku.validationSudoku())
+            {
+                solver.Sudoku.showTwoSudoku();
                 return -1;
-            solver.Sudoku.showTwoSudoku();
-
+            }
+            //solver.Sudoku.showTwoSudoku();
             return elapsedMs;
         }
     }
