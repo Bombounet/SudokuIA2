@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="Grp4 DancingLinks\Dlx\Dlx.csproj" />
     <PackageReference Include="Google.OrTools" Version="7.3.7083" />
+    <PackageReference Include="IronPython" Version="2.7.9" />
   </ItemGroup>
 
 </Project>
