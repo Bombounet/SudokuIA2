@@ -76,6 +76,7 @@ namespace SudokuIA2
                 {
                     List<Dictionary<String, float>> scores = new List<Dictionary<string, float>>();
 
+                    benchmark(customSudoku(30));
                     for (int i = 30; i >= 17; i--)
                     {
                         scores.Add(benchmark(customSudoku(i)));
@@ -95,11 +96,12 @@ namespace SudokuIA2
                         }
                     }
                     refreshSolver();
+                    Console.WriteLine("\n        /*--------------------Résultat du Benchmark // Custom--------------------*/\n");
                     for (int i = 30; i >= 17; i--)
                     {
-                        showScore(scores[-i + 30], 10, ""+i);
+                        showCustomScore(scores[-i + 30], 10, ""+i);
                     }
-
+                    Console.WriteLine("\n        /*--------------------FIN Résultat du Benchmark--------------------*/\n");
                 }
                 else if (choix == solvers.Count + 4)
                 {
@@ -209,6 +211,19 @@ namespace SudokuIA2
                     Console.WriteLine("        " + score.Key + " : Validé en " + score.Value + "ms  (" + (score.Value / nbSudoku) + " ms/sodoku)\n");
             }
             Console.WriteLine("\n        /*--------------------FIN Résultat du Benchmark--------------------*/\n");
+        }
+
+        public static void showCustomScore(Dictionary<String, float> scores, int nbSudoku, String dificulty)
+        {
+            Console.WriteLine("\n\n        /*---Dificulté : " + dificulty + " // " + nbSudoku + " sodokus---*/\n");
+            foreach (KeyValuePair<String, float> score in scores)
+            {
+                if (score.Value == -1)
+                    Console.WriteLine("        " + score.Key + " : Non validé\n");
+                else
+                    Console.WriteLine("        " + score.Key + " : Validé en " + score.Value + "ms  (" + (score.Value / nbSudoku) + " ms/sodoku)\n");
+            }
+            
         }
     }
 }
