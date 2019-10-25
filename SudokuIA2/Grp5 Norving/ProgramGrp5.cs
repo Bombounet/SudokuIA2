@@ -21,24 +21,17 @@ namespace SudokuIA2.Grp5_Norving
         {
             Sudoku = new Sudoku();
             Name = "Grp5 Norvig";
-            source = engine.CreateScriptSourceFromFile(script);
-            scope = engine.CreateScope();
 
-            int[][] grid = Sudoku.getSudoku(new int[9][]);
 
-            string gridValues = "";
-            foreach (var line in grid)
-            {
-                foreach (var col in line)
-                {
-                    gridValues += col;
-                }
-            }
-            engine.GetSysModule().SetVariable("argv", gridValues);
         }
 
         public void Solve()
         {
+            source = engine.CreateScriptSourceFromFile(script);
+            scope = engine.CreateScope();
+
+            string gridValues = Sudoku.sudokuToString(Sudoku.getSudoku(new int[9][]));
+            engine.GetSysModule().SetVariable("argv", gridValues);
             source.Execute(scope);
             String gridSolved = scope.GetVariable<string>("gridSolved");
 

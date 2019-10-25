@@ -77,6 +77,12 @@ def toString(values):
         a += ''.join(values[r + c] for c in cols)
     return a
 
+def some(seq):
+    "Return some element of seq that is true."
+    for e in seq:
+        if e: return e
+    return False
+
 ################ Search ################
 
 def solve(grid):
