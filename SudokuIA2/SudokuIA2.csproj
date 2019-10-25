@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <ProjectReference Include="Grp4 DancingLinks\Dlx\Dlx.csproj" />
+    <PackageReference Include="GeneticSharp" Version="2.6.0" />
+    <PackageReference Include="GeneticSharp.Extensions" Version="2.6.0" />
     <PackageReference Include="Google.OrTools" Version="7.3.7083" />
     <PackageReference Include="IronPython" Version="2.7.9" />
   </ItemGroup>
