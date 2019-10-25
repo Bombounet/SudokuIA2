@@ -38,7 +38,7 @@ namespace SudokuIA2.Grp1_Genetic
                 Termination = new OrTermination(new ITermination[]
                 {
                     new FitnessThresholdTermination(0),
-                    new GenerationNumberTermination(100)
+                    new GenerationNumberTermination(1000)
                 })
             };
 

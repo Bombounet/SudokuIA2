@@ -37,7 +37,9 @@ namespace SudokuIA2
                 Console.WriteLine("                " + (solvers.Count + 1) + ". Benchmark Hardest");
                 Console.WriteLine("                " + (solvers.Count + 2) + ". Benchmark Top 95");
                 Console.WriteLine("                " + (solvers.Count + 3) + ". Benchmark Custom");
-                Console.WriteLine("                " + (solvers.Count + 4) + ". Quitter");
+                Console.WriteLine("                " + (solvers.Count + 4) + ". Remove Solver");
+                Console.WriteLine("                " + (solvers.Count + 5) + ". Refresh Solver");
+                Console.WriteLine("                " + (solvers.Count + 6) + ". Quitter");
 
                 Console.WriteLine("\n                Que voulez vous faire ?");
 
@@ -114,9 +116,26 @@ namespace SudokuIA2
                 }
                 else if (choix == solvers.Count + 4)
                 {
+                    try
+                    {
+                        Console.WriteLine("\n        Quel Solver voulez vous supprimer ?\n");
+                        int suppr = int.Parse(Console.ReadLine());
+                        if (suppr >= 0 && suppr < solvers.Count)
+                            solvers.RemoveAt(suppr);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("\n\n                Saisie invalide\n\n");
+                    }
+                }
+                else if (choix == solvers.Count + 5)
+                {
+                    refreshSolver();
+                }
+                else if (choix == solvers.Count + 6)
+                {
                     Quitter = true;
                 }
-
             } while (!Quitter);
 
             Console.WriteLine("\n\n\n        FIIIIIN");
