@@ -41,7 +41,16 @@ namespace SudokuIA2
 
                 Console.WriteLine("\n                Que voulez vous faire ?");
 
-                int choix = int.Parse(Console.ReadLine());
+                int choix;
+                try
+                {
+                    choix = int.Parse(Console.ReadLine());
+                }
+                catch (Exception e)
+                {
+                    choix = -1;
+                    Console.WriteLine("\n\n                Saisie invalide\n\n");
+                }
 
                 var watch = Stopwatch.StartNew();
                 watch.Stop();
